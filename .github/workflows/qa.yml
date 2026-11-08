@@ -29,7 +29,7 @@ jobs:
           echo $! > server.pid
 
       - name: Wait for server
-        run: npx wait-on http://127.0.0.1:3000/api/health
+        run: npx wait-on --timeout 60000 http://127.0.0.1:3000/api/health
 
       - name: Run Cypress E2E tests
         run: npm run e2e
