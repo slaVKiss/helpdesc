@@ -1,4 +1,3 @@
-
 name: HelpDesk autotests
 
 on:
@@ -29,7 +28,14 @@ jobs:
           echo $! > server.pid
 
       - name: Wait for server
-        run: npx wait-on --timeout 60000 http://127.0.0.1:3000/api/health
+        run: |
+          # Надежный цикл ожидания сервера через curl вместо wait-on
+          for i in {1..30}; do
+            curl -s http://localhost:3000/api/health && exit 0
+            sleep 1
+          done
+          echo "Server timeout!"
+          exit 1
 
       - name: Run Cypress E2E tests
         run: npm run e2e
